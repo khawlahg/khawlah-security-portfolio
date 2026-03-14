@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Intrusion Detection Rule Optimization{% endblock %}</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="../static/tag.png" type="image/x-icon">
+
+    <style>
+        :root {
+            --primary-black: #000000;
+            --primary-burgundy: #800020;
+            --light-burgundy: #a0002a;
+            --dark-burgundy: #600018;
+            --primary-gray: #808080;
+            --light-gray: #a0a0a0;
+            --dark-gray: #404040;
+            --bg-light: #f8f8f8;
+            --bg-white: #ffffff;
+            --text-primary: #000000;
+            --text-secondary: #404040;
+            --text-muted: #808080;
+            --border-color: #e0e0e0;
+            --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-black) 0%, var(--dark-gray) 100%);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow-medium);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-burgundy);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .logo-text p {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--light-burgundy);
+        }
+
+        .main-content {
+            padding: 3rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .card {
+            background: var(--bg-white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .card-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-title i {
+            color: var(--primary-burgundy);
+        }
+
+        .card-subtitle {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 44px;
+        }
+
+        .btn-primary {
+            background: var(--primary-burgundy);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--light-burgundy);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(128, 0, 32, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--dark-gray);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-black);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-burgundy);
+            border: 2px solid var(--primary-burgundy);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-burgundy);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--primary-burgundy);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: rgba(128, 0, 32, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            background: rgba(128, 0, 32, 0.1);
+            border-color: var(--light-burgundy);
+        }
+
+        .upload-area.dragover {
+            background: rgba(128, 0, 32, 0.15);
+            border-color: var(--primary-burgundy);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary-burgundy);
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-burgundy), var(--light-burgundy));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .status-message {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .status-info {
+            background: rgba(128, 0, 32, 0.1);
+            border-left: 4px solid var(--primary-burgundy);
+            color: var(--dark-burgundy);
+        }
+
+        .status-success {
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 4px solid #22c55e;
+            color: #166534;
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid #ef4444;
+            color: #dc2626;
+        }
+
+        .grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .metric-card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            border-color: var(--primary-burgundy);
+            transform: translateY(-2px);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-burgundy);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-white);
+        }
+
+        th {
+            background: var(--primary-black);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:hover {
+            background: rgba(128, 0, 32, 0.05);
+        }
+
+        .method-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .method-fixed {
+            background: rgba(128, 128, 128, 0.2);
+            color: var(--dark-gray);
+        }
+
+        .method-greedy {
+            background: rgba(64, 64, 64, 0.2);
+            color: var(--primary-black);
+        }
+
+        .method-astar {
+            background: rgba(128, 0, 32, 0.2);
+            color: var(--primary-burgundy);
+        }
+
+        .method-ga {
+            background: var(--primary-burgundy);
+            color: white;
+        }
+/* Modal Styling */
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+}
+
+.modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.modal-box {
+    position: relative;
+    max-width: 520px;
+    margin: 10% auto;
+    background: var(--bg-white);
+    border-radius: 16px;
+    box-shadow: var(--shadow-medium);
+    overflow: hidden;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    background: var(--primary-black);
+    color: white;
+}
+
+.modal-header h2 {
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.75rem;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 1.5rem;
+    color: var(--text-secondary);
+}
+
+.modal-body ul {
+    margin: 1rem 0;
+    padding-left: 1.2rem;
+}
+
+.modal-body li {
+    margin-bottom: 0.5rem;
+}
+
+        .chart-container {
+            background: var(--bg-white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: var(--shadow-light);
+        }
+
+        .footer {
+            background: var(--primary-black);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>IDS Optimization</h1>
+                        <p>Genetic Algorithm for Rule Optimization</p>
+                    </div>
+                </div>
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="#" onclick="showAbout()"><i class="fas fa-info-circle"></i> About</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+<!-- About Modal -->
+<div id="aboutModal" class="modal hidden">
+    <div class="modal-overlay" onclick="closeAbout()"></div>
+
+    <div class="modal-box fade-in">
+        <div class="modal-header">
+            <h2><i class="fas fa-info-circle"></i> About This System</h2>
+            <button class="modal-close" onclick="closeAbout()">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <p>
+                <strong>Intrusion Detection Rule Optimization</strong> is a system designed
+                to improve IDS rule thresholds using multiple optimization techniques.
+            </p>
+
+            <ul>
+                <li><span class="method-badge method-fixed">Fixed</span> Baseline thresholds</li>
+                <li><span class="method-badge method-greedy">Greedy</span> Search optimization</li>
+                <li><span class="method-badge method-astar">A*</span> Search optimization</li>
+                <li><span class="method-badge method-ga">GA</span> Genetic Algorithm optimization</li>
+            </ul>
+
+            <p>
+                <strong>Fitness Function:</strong><br>
+                Detection Rate − False Positive Rate
+            </p>
+        </div>
+    </div>
+</div>
+
+    <main class="main-content">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Intrusion Detection Rule Optimization using Genetic Algorithm</p>
+            <p style="margin-top: 0.5rem; opacity: 0.8; font-size: 0.875rem;">
+            Created by: • Roa'a Al-ahgeri • Khawlah alqas • Sara alzendani            </p>
+        </div>
+    </footer>
+
+  <script>
+    function showAbout() {
+        document.getElementById("aboutModal").classList.remove("hidden");
+    }
+
+    function closeAbout() {
+        document.getElementById("aboutModal").classList.add("hidden");
+    }
+</script>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,421 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="flex items-center space-x-3 mb-2">
+                    <a href="/" class="text-slate-400 hover:text-white transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                    </a>
+                    <h1 class="text-3xl font-bold text-white">Scan Results</h1>
+                </div>
+                <p class="text-slate-400 font-mono text-sm">Target: <span class="text-cyber-500">{{ results.target }}</span> | Scan Date: {{ results.scan_date }}</p>
+            </div>
+            <a href="/download_report/{{ report_file }}" class="px-4 py-2 bg-cyber-600 hover:bg-cyber-500 text-white rounded-lg text-sm font-medium transition-colors flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                <span>Download JSON</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div class="glass-panel rounded-xl p-4 border-l-4 border-cyber-500">
+            <div class="text-slate-400 text-xs uppercase tracking-wider mb-1">WHOIS Status</div>
+            <div class="text-lg font-semibold text-white">
+                {% if results.whois.error %}<span class="status-dot status-danger"></span>Failed{% else %}<span class="status-dot status-active"></span>Active{% endif %}
+            </div>
+        </div>
+        <div class="glass-panel rounded-xl p-4 border-l-4 border-indigo-500">
+            <div class="text-slate-400 text-xs uppercase tracking-wider mb-1">DNS Records</div>
+            <div class="text-lg font-semibold text-white">
+                {% if results.dns.a_records|length > 0 %}<span class="status-dot status-active"></span>{{ results.dns.a_records|length }} Records{% else %}<span class="status-dot status-warning"></span>None{% endif %}
+            </div>
+        </div>
+        <div class="glass-panel rounded-xl p-4 border-l-4 border-emerald-500">
+            <div class="text-slate-400 text-xs uppercase tracking-wider mb-1">Subdomains</div>
+            <div class="text-lg font-semibold text-white">
+                {% if results.dns.subdomains|length > 0 %}<span class="status-dot status-active"></span>{{ results.dns.subdomains|length }} Found{% else %}<span class="status-dot status-warning"></span>None{% endif %}
+            </div>
+        </div>
+        <div class="glass-panel rounded-xl p-4 border-l-4 border-amber-500">
+            <div class="text-slate-400 text-xs uppercase tracking-wider mb-1">Archive Snapshots</div>
+            <div class="text-lg font-semibold text-white">
+                {% if results.archive.total_snapshots > 0 %}<span class="status-dot status-active"></span>{{ results.archive.total_snapshots }}{% else %}<span class="status-dot status-warning"></span>None{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- WHOIS Information -->
+        <div class="glass-panel rounded-xl p-6 card-hover">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-cyber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    WHOIS Intelligence
+                </h2>
+                <span class="text-xs px-2 py-1 bg-cyber-500/20 text-cyber-400 rounded-full">Registration</span>
+            </div>
+            
+            {% if results.whois.error %}
+                <div class="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+                    {{ results.whois.error }}
+                </div>
+            {% else %}
+                <div class="space-y-3">
+                    <div class="flex justify-between border-b border-slate-700 pb-2">
+                        <span class="text-slate-400 text-sm">Registrar</span>
+                        <span class="text-white text-sm font-medium">{{ results.whois.registrar }}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-700 pb-2">
+                        <span class="text-slate-400 text-sm">Created</span>
+                        <span class="text-white text-sm font-medium">{{ results.whois.creation_date }}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-700 pb-2">
+                        <span class="text-slate-400 text-sm">Expires</span>
+                        <span class="text-white text-sm font-medium">{{ results.whois.expiration_date }}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-700 pb-2">
+                        <span class="text-slate-400 text-sm">Organization</span>
+                        <span class="text-white text-sm font-medium">{{ results.whois.org }}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-700 pb-2">
+                        <span class="text-slate-400 text-sm">Country</span>
+                        <span class="text-white text-sm font-medium">{{ results.whois.country }}</span>
+                    </div>
+                    <div class="pt-2">
+                        <span class="text-slate-400 text-sm block mb-2">Name Servers</span>
+                        <div class="flex flex-wrap gap-2">
+                            {% for ns in results.whois.name_servers %}
+                                <span class="px-2 py-1 bg-slate-800 text-slate-300 text-xs rounded font-mono">{{ ns }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% if results.whois.emails %}
+                    <div class="pt-2">
+                        <span class="text-slate-400 text-sm block mb-2">Contact Emails</span>
+                        <div class="space-y-1">
+                            {% for email in results.whois.emails %}
+                                <div class="text-emerald-400 text-sm font-mono">{{ email }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- DNS Records -->
+        <div class="glass-panel rounded-xl p-6 card-hover">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                    </svg>
+                    DNS Infrastructure
+                </h2>
+                <span class="text-xs px-2 py-1 bg-indigo-500/20 text-indigo-400 rounded-full">Network</span>
+            </div>
+
+            {% if results.dns.error %}
+                <div class="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+                    {{ results.dns.error }}
+                </div>
+            {% else %}
+                <div class="space-y-4">
+                    <!-- A Records -->
+                    {% if results.dns.a_records %}
+                    <div>
+                        <h3 class="text-xs uppercase tracking-wider text-slate-500 mb-2">A Records</h3>
+                        <div class="space-y-2">
+                            {% for record in results.dns.a_records %}
+                            <div class="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
+                                <span class="text-cyber-400 font-mono text-sm">{{ record.ip }}</span>
+                                <span class="text-slate-500 text-xs">{{ record.reverse_dns }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- MX Records -->
+                    {% if results.dns.mx_records %}
+                    <div>
+                        <h3 class="text-xs uppercase tracking-wider text-slate-500 mb-2">Mail Servers</h3>
+                        <div class="space-y-2">
+                            {% for mx in results.dns.mx_records %}
+                            <div class="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
+                                <span class="text-indigo-400 font-mono text-sm">{{ mx.exchange }}</span>
+                                <span class="text-slate-500 text-xs">Priority: {{ mx.preference }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Subdomains -->
+                    {% if results.dns.subdomains %}
+                    <div>
+                        <h3 class="text-xs uppercase tracking-wider text-slate-500 mb-2">Discovered Subdomains</h3>
+                        <div class="grid grid-cols-1 gap-2">
+                            {% for sub in results.dns.subdomains %}
+                            <div class="flex items-center justify-between p-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
+                                <span class="text-emerald-400 font-mono text-sm">{{ sub.name }}</span>
+                                <span class="text-slate-500 text-xs">{{ sub.ip }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- GitHub Intelligence -->
+        <div class="glass-panel rounded-xl p-6 card-hover">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-slate-200" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
+                    </svg>
+                    GitHub OSINT
+                </h2>
+                <span class="text-xs px-2 py-1 bg-slate-700 text-slate-300 rounded-full">Code</span>
+            </div>
+
+            {% if results.github.error %}
+                <div class="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+                    {{ results.github.error }}
+                </div>
+            {% else %}
+                <div class="space-y-4">
+                    {% if results.github.repositories %}
+                    <div>
+                        <h3 class="text-xs uppercase tracking-wider text-slate-500 mb-2">Related Repositories</h3>
+                        <div class="space-y-2">
+                            {% for repo in results.github.repositories %}
+                            <a href="{{ repo.url }}" target="_blank" class="block p-3 bg-slate-800/50 rounded-lg hover:bg-slate-800 transition-colors">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-cyber-400 font-medium text-sm">{{ repo.name }}</span>
+                                    <span class="text-xs text-slate-500">Stars: {{ repo.stars }}</span>
+                                </div>
+                                <p class="text-slate-400 text-xs line-clamp-2">{{ repo.description or 'No description' }}</p>
+                                {% if repo.language %}
+                                <span class="inline-block mt-2 px-2 py-0.5 bg-slate-700 text-slate-300 text-xs rounded">{{ repo.language }}</span>
+                                {% endif %}
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if results.github.code_leaks %}
+                    <div>
+                        <h3 class="text-xs uppercase tracking-wider text-slate-500 mb-2">Potential Code Mentions</h3>
+                        <div class="space-y-2 max-h-40 overflow-y-auto">
+                            {% for leak in results.github.code_leaks %}
+                            <a href="{{ leak.url }}" target="_blank" class="block p-2 bg-amber-500/10 border border-amber-500/20 rounded-lg text-xs">
+                                <span class="text-amber-400 font-mono">{{ leak.name }}</span>
+                                <span class="text-slate-500">in {{ leak.repository }}</span>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if results.github.users %}
+                    <div>
+                        <h3 class="text-xs uppercase tracking-wider text-slate-500 mb-2">Related Users</h3>
+                        <div class="flex flex-wrap gap-2">
+                            {% for user in results.github.users %}
+                            <a href="{{ user.profile_url }}" target="_blank" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-full transition-colors">
+                                {{ user.username }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Breach Check -->
+        <div class="glass-panel rounded-xl p-6 card-hover">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                    Breach Intelligence
+                </h2>
+                <span class="text-xs px-2 py-1 bg-red-500/20 text-red-400 rounded-full">Security</span>
+            </div>
+
+            {% if results.breaches.error %}
+                <div class="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+                    {{ results.breaches.error }}
+                </div>
+            {% else %}
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-3 bg-slate-800/50 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-white">{{ results.breaches.summary.total_checked }}</div>
+                            <div class="text-xs text-slate-500">Emails Checked</div>
+                        </div>
+                        <div class="p-3 bg-slate-800/50 rounded-lg text-center">
+                            <div class="text-2xl font-bold {% if results.breaches.summary.breached_found > 0 %}text-red-400{% else %}text-emerald-400{% endif %}">
+                                {{ results.breaches.summary.breached_found }}
+                            </div>
+                            <div class="text-xs text-slate-500">Breaches Found</div>
+                        </div>
+                    </div>
+
+                    {% if results.breaches.breached_accounts %}
+                    <div>
+                        <h3 class="text-xs uppercase tracking-wider text-red-500 mb-2">Compromised Accounts</h3>
+                        <div class="space-y-2">
+                            {% for account in results.breaches.breached_accounts %}
+                            <div class="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                                <div class="text-red-400 font-mono text-sm mb-1">{{ account.email }}</div>
+                                <div class="text-xs text-slate-400">
+                                    Breaches: {{ account.breaches|length }}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
+                        <div class="flex items-center text-emerald-400">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="font-medium">No breaches found for checked emails</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Search Intelligence -->
+        <div class="glass-panel rounded-xl p-6 card-hover">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    Search Intelligence
+                </h2>
+                <span class="text-xs px-2 py-1 bg-amber-500/20 text-amber-400 rounded-full">Dorks</span>
+            </div>
+
+            {% if results.search.error %}
+                <div class="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+                    {{ results.search.error }}
+                </div>
+            {% else %}
+                <div class="space-y-4">
+                    {% if results.search.google_dorks %}
+                    <div>
+                        <h3 class="text-xs uppercase tracking-wider text-slate-500 mb-2">Google Dorks</h3>
+                        <div class="space-y-2 max-h-60 overflow-y-auto">
+                            {% for dork in results.search.google_dorks %}
+                            <a href="{{ dork.url }}" target="_blank" class="block p-3 bg-slate-800/50 rounded-lg hover:bg-slate-800 transition-colors group">
+                                <div class="flex items-center justify-between mb-1">
+                                    <code class="text-amber-400 text-xs font-mono">{{ dork.query }}</code>
+                                    <svg class="w-4 h-4 text-slate-600 group-hover:text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                </div>
+                                <p class="text-slate-500 text-xs">{{ dork.description }}</p>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if results.search.robots_txt %}
+                    <div class="mt-4">
+                        <h3 class="text-xs uppercase tracking-wider text-slate-500 mb-2">robots.txt</h3>
+                        <pre class="p-3 bg-slate-900 rounded-lg text-xs text-slate-400 overflow-x-auto font-mono">{{ results.search.robots_txt }}</pre>
+                    </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Wayback Machine -->
+        <div class="glass-panel rounded-xl p-6 card-hover">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Archive Intelligence
+                </h2>
+                <span class="text-xs px-2 py-1 bg-purple-500/20 text-purple-400 rounded-full">History</span>
+            </div>
+
+            {% if results.archive.error %}
+                <div class="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+                    {{ results.archive.error }}
+                </div>
+            {% else %}
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-3 bg-slate-800/50 rounded-lg">
+                            <div class="text-xs text-slate-500 mb-1">First Seen</div>
+                            <div class="text-sm text-white font-medium">{{ results.archive.first_seen or 'N/A' }}</div>
+                        </div>
+                        <div class="p-3 bg-slate-800/50 rounded-lg">
+                            <div class="text-xs text-slate-500 mb-1">Last Seen</div>
+                            <div class="text-sm text-white font-medium">{{ results.archive.last_seen or 'N/A' }}</div>
+                        </div>
+                    </div>
+
+                    {% if results.archive.interesting_snapshots %}
+                    <div>
+                        <h3 class="text-xs uppercase tracking-wider text-slate-500 mb-2">Historical Snapshots</h3>
+                        <div class="space-y-2">
+                            {% for snapshot in results.archive.interesting_snapshots %}
+                            <a href="{{ snapshot.url }}" target="_blank" class="block p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg hover:bg-purple-500/20 transition-colors">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-purple-400 text-sm font-medium">{{ snapshot.date }}</span>
+                                    <span class="text-xs px-2 py-0.5 bg-purple-500/20 text-purple-300 rounded">{{ snapshot.status }}</span>
+                                </div>
+                                <div class="text-xs text-slate-500">{{ snapshot.type }}</div>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if results.archive.url_changes %}
+                    <div>
+                        <h3 class="text-xs uppercase tracking-wider text-slate-500 mb-2">URL Structure Changes</h3>
+                        <div class="flex flex-wrap gap-2">
+                            {% for path in results.archive.url_changes %}
+                            <span class="px-2 py-1 bg-slate-800 text-slate-400 text-xs rounded font-mono">{{ path }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

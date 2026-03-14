@@ -1,0 +1,235 @@
+{
+  "target": "ust.edu",
+  "scan_date": "2026-03-14 23:22:53",
+  "whois": {
+    "domain_name": "UST.EDU",
+    "registrar": "N/A",
+    "creation_date": "N/A",
+    "expiration_date": "N/A",
+    "updated_date": "N/A",
+    "name_servers": [],
+    "status": [],
+    "emails": [
+      "dr.waheeb@ust.edu"
+    ],
+    "org": "N/A",
+    "country": "N/A",
+    "dnssec": "N/A"
+  },
+  "dns": {
+    "a_records": [
+      {
+        "ip": "185.93.165.69",
+        "reverse_dns": "server.interactive.edu.my"
+      }
+    ],
+    "mx_records": [
+      {
+        "preference": 50,
+        "exchange": "aspmx3.googlemail.com."
+      },
+      {
+        "preference": 20,
+        "exchange": "alt1.aspmx.l.google.com."
+      },
+      {
+        "preference": 30,
+        "exchange": "alt2.aspmx.l.google.com."
+      },
+      {
+        "preference": 10,
+        "exchange": "aspmx.l.google.com."
+      },
+      {
+        "preference": 40,
+        "exchange": "aspmx2.googlemail.com."
+      }
+    ],
+    "ns_records": [
+      "pdns05.domaincontrol.com.",
+      "pdns06.domaincontrol.com."
+    ],
+    "txt_records": [
+      "\"sdor56s3p53psshs26ioijfkb7\"",
+      "\"v=spf1 include:_spf.google.com ~all\"",
+      "\"1ceaaraqdf92ap7e65l1k48hnk\"",
+      "\"jb6q174s7sduot7vn3jd6o5h9o\"",
+      "\"MS=F9FB967BBDBE26E9009ADDC28B748BFA092546BF\"",
+      "\"5vsummct4579i9f7l2lm9s4ekl\"",
+      "\"eh1878ceio1mv015ns31bl7tan\"",
+      "\"1k9d1fb3n0ov0j732bvc9h7jk\"",
+      "\"GOOGLE-SITE-VERIFICATION=UZIY4T6KZLZCBTSUJYMCIJACIPLMOK5PU9T3RGXERVS\"",
+      "\"google-site-verification=ADyW4L3PE0MxZcVFUEJ8EaVrM48BIDIujTO5BULWR9I\""
+    ],
+    "soa_record": {
+      "mname": "pdns05.domaincontrol.com.",
+      "rname": "dns.jomax.net.",
+      "serial": 2026021902,
+      "refresh": 28800,
+      "retry": 7200,
+      "expire": 604800,
+      "minimum": 600
+    },
+    "subdomains": [
+      {
+        "name": "www.ust.edu",
+        "ip": "185.93.165.69"
+      },
+      {
+        "name": "mail.ust.edu",
+        "ip": "142.251.36.51"
+      },
+      {
+        "name": "ftp.ust.edu",
+        "ip": "185.93.165.69"
+      },
+      {
+        "name": "admin.ust.edu",
+        "ip": "185.93.165.69"
+      },
+      {
+        "name": "blog.ust.edu",
+        "ip": "185.93.165.69"
+      },
+      {
+        "name": "shop.ust.edu",
+        "ip": "185.93.165.69"
+      },
+      {
+        "name": "api.ust.edu",
+        "ip": "185.93.165.69"
+      },
+      {
+        "name": "dev.ust.edu",
+        "ip": "185.93.165.69"
+      },
+      {
+        "name": "test.ust.edu",
+        "ip": "162.19.4.123"
+      },
+      {
+        "name": "portal.ust.edu",
+        "ip": "185.93.165.69"
+      }
+    ]
+  },
+  "github": {
+    "repositories": [
+      {
+        "name": "microsoft/UST",
+        "description": "Uncertainty-aware Self-training",
+        "url": "https://github.com/microsoft/UST",
+        "stars": 124,
+        "language": "Python"
+      },
+      {
+        "name": "USTC-Resource/USTC-Course",
+        "description": ":heart:\u4e2d\u56fd\u79d1\u5b66\u6280\u672f\u5927\u5b66\u8bfe\u7a0b\u8d44\u6e90",
+        "url": "https://github.com/USTC-Resource/USTC-Course",
+        "stars": 16032,
+        "language": "C++"
+      },
+      {
+        "name": "ustcwpz/USTC-CS-Courses-Resource",
+        "description": "USTC\u8ba1\u7b97\u673a\u5b66\u9662\u8bfe\u7a0b\u8d44\u6e90",
+        "url": "https://github.com/ustcwpz/USTC-CS-Courses-Resource",
+        "stars": 1294,
+        "language": "C"
+      },
+      {
+        "name": "ustctug/ustcthesis",
+        "description": "LaTeX template for USTC thesis",
+        "url": "https://github.com/ustctug/ustcthesis",
+        "stars": 2024,
+        "language": "TeX"
+      },
+      {
+        "name": "pikvm/ustreamer",
+        "description": "\u00b5Streamer - Lightweight and fast MJPEG-HTTP streamer",
+        "url": "https://github.com/pikvm/ustreamer",
+        "stars": 1955,
+        "language": "C"
+      }
+    ],
+    "code_leaks": [],
+    "users": [],
+    "emails_found": []
+  },
+  "breaches": {
+    "breached_accounts": [],
+    "pastes": [],
+    "summary": {
+      "total_checked": 7,
+      "breached_found": 0,
+      "domain": "ust.edu"
+    }
+  },
+  "search": {
+    "google_dorks": [
+      {
+        "query": "site:ust.edu filetype:pdf",
+        "description": "PDF documents that may contain sensitive information",
+        "url": "https://www.google.com/search?q=site%3Aust.edu%20filetype%3Apdf"
+      },
+      {
+        "query": "site:ust.edu filetype:docx",
+        "description": "Word documents",
+        "url": "https://www.google.com/search?q=site%3Aust.edu%20filetype%3Adocx"
+      },
+      {
+        "query": "site:ust.edu inurl:admin",
+        "description": "Potential admin panels",
+        "url": "https://www.google.com/search?q=site%3Aust.edu%20inurl%3Aadmin"
+      },
+      {
+        "query": "site:ust.edu inurl:login",
+        "description": "Login pages",
+        "url": "https://www.google.com/search?q=site%3Aust.edu%20inurl%3Alogin"
+      },
+      {
+        "query": "site:ust.edu intitle:\"index of\"",
+        "description": "Exposed directory listings",
+        "url": "https://www.google.com/search?q=site%3Aust.edu%20intitle%3A%22index%20of%22"
+      },
+      {
+        "query": "site:ust.edu ext:sql|ext:db|ext:backup",
+        "description": "Database files",
+        "url": "https://www.google.com/search?q=site%3Aust.edu%20ext%3Asql%7Cext%3Adb%7Cext%3Abackup"
+      },
+      {
+        "query": "site:*.ust.edu",
+        "description": "Custom search",
+        "url": "https://www.google.com/search?q=site%3A%2A.ust.edu"
+      },
+      {
+        "query": "intitle:\"index of\" site:ust.edu",
+        "description": "Exposed directory listings",
+        "url": "https://www.google.com/search?q=intitle%3A%22index%20of%22%20site%3Aust.edu"
+      },
+      {
+        "query": "filetype:env site:ust.edu",
+        "description": "Environment configuration files",
+        "url": "https://www.google.com/search?q=filetype%3Aenv%20site%3Aust.edu"
+      },
+      {
+        "query": "filetype:config site:ust.edu",
+        "description": "Configuration files",
+        "url": "https://www.google.com/search?q=filetype%3Aconfig%20site%3Aust.edu"
+      }
+    ],
+    "sensitive_files": [],
+    "exposed_directories": [],
+    "login_pages": [],
+    "subdomains": [],
+    "robots_txt": "User-agent: *\nDisallow: /*blackhole\nDisallow: /?blackhole\nAllow: /wp-content/uploads/\nDisallow: /wp-content/plugins/\nDisallow: /wp-admin/\n\nSitemap: https://ust.edu/sitemap.xml\n",
+    "sitemap_xml": "Found"
+  },
+  "archive": {
+    "total_snapshots": 0,
+    "first_seen": null,
+    "last_seen": null,
+    "interesting_snapshots": [],
+    "url_changes": [],
+    "error": "HTTPConnectionPool(host='web.archive.org', port=80): Max retries exceeded with url: /cdx/search/cdx?url=ust.edu&output=json&collapse=timestamp%3A8&limit=100 (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x0000028C97361F70>: Failed to resolve 'web.archive.org' ([Errno 11001] getaddrinfo failed)\"))"
+  }
+}

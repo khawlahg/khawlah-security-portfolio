@@ -1,0 +1,137 @@
+{
+  "target": "cisco.com",
+  "scan_date": "2026-03-14 23:25:31",
+  "whois": {
+    "domain_name": "N/A",
+    "registrar": "N/A",
+    "creation_date": "N/A",
+    "expiration_date": "N/A",
+    "updated_date": "N/A",
+    "name_servers": [],
+    "status": [],
+    "emails": [],
+    "org": "N/A",
+    "country": "N/A",
+    "dnssec": "N/A"
+  },
+  "dns": {
+    "a_records": [],
+    "mx_records": [],
+    "ns_records": [],
+    "txt_records": [],
+    "soa_record": {},
+    "subdomains": [
+      {
+        "name": "www.cisco.com",
+        "ip": "184.86.116.119"
+      },
+      {
+        "name": "mail.cisco.com",
+        "ip": "173.37.151.56"
+      },
+      {
+        "name": "shop.cisco.com",
+        "ip": "72.163.4.154"
+      },
+      {
+        "name": "api.cisco.com",
+        "ip": "72.163.8.72"
+      },
+      {
+        "name": "test.cisco.com",
+        "ip": "172.21.179.153"
+      },
+      {
+        "name": "test.cisco.com",
+        "ip": "64.102.247.10"
+      },
+      {
+        "name": "test.cisco.com",
+        "ip": "10.18.153.100"
+      }
+    ]
+  },
+  "github": {
+    "repositories": [],
+    "code_leaks": [],
+    "users": [],
+    "emails_found": []
+  },
+  "breaches": {
+    "breached_accounts": [],
+    "pastes": [],
+    "summary": {
+      "total_checked": 7,
+      "breached_found": 0,
+      "domain": "cisco.com"
+    }
+  },
+  "search": {
+    "google_dorks": [
+      {
+        "query": "site:cisco.com filetype:pdf",
+        "description": "PDF documents that may contain sensitive information",
+        "url": "https://www.google.com/search?q=site%3Acisco.com%20filetype%3Apdf"
+      },
+      {
+        "query": "site:cisco.com filetype:docx",
+        "description": "Word documents",
+        "url": "https://www.google.com/search?q=site%3Acisco.com%20filetype%3Adocx"
+      },
+      {
+        "query": "site:cisco.com inurl:admin",
+        "description": "Potential admin panels",
+        "url": "https://www.google.com/search?q=site%3Acisco.com%20inurl%3Aadmin"
+      },
+      {
+        "query": "site:cisco.com inurl:login",
+        "description": "Login pages",
+        "url": "https://www.google.com/search?q=site%3Acisco.com%20inurl%3Alogin"
+      },
+      {
+        "query": "site:cisco.com intitle:\"index of\"",
+        "description": "Exposed directory listings",
+        "url": "https://www.google.com/search?q=site%3Acisco.com%20intitle%3A%22index%20of%22"
+      },
+      {
+        "query": "site:cisco.com ext:sql|ext:db|ext:backup",
+        "description": "Database files",
+        "url": "https://www.google.com/search?q=site%3Acisco.com%20ext%3Asql%7Cext%3Adb%7Cext%3Abackup"
+      },
+      {
+        "query": "site:*.cisco.com",
+        "description": "Custom search",
+        "url": "https://www.google.com/search?q=site%3A%2A.cisco.com"
+      },
+      {
+        "query": "intitle:\"index of\" site:cisco.com",
+        "description": "Exposed directory listings",
+        "url": "https://www.google.com/search?q=intitle%3A%22index%20of%22%20site%3Acisco.com"
+      },
+      {
+        "query": "filetype:env site:cisco.com",
+        "description": "Environment configuration files",
+        "url": "https://www.google.com/search?q=filetype%3Aenv%20site%3Acisco.com"
+      },
+      {
+        "query": "filetype:config site:cisco.com",
+        "description": "Configuration files",
+        "url": "https://www.google.com/search?q=filetype%3Aconfig%20site%3Acisco.com"
+      }
+    ],
+    "sensitive_files": [],
+    "exposed_directories": [],
+    "login_pages": [],
+    "subdomains": [],
+    "robots_txt": "#--------------------------------\r\nUser-agent: cisco-googlebot-enterprise\r\nDisallow: /bug-navigator # Bug Data\r\n# Disallow: /cgi-bin # allow test crawls for TAC support content\r\nDisallow: /pcgi-bin # no programs\r\nDisallow: /univ-src/ccden # will get content through /univercd\r\nDisallow: /cpropub/univercd # obsolete\r\nDisallow: /jobs     # temporary entry per performance team\r\n#--------------------------------\r\n\r\nUser-agent: GPTBot\r\nDisallow: /\r\n\r\n#--------------------------------\r\n\r\nUser-agent: CCBot\r\nDisallow: /\r\n\r\n#--------------------------------\r\n\r\nUser-agent: Google-Extended\r\nDisallow: /\r\n\r\n#--------------------------------\r\nUser-agent: *\r\nDisallow: /*.html?cachemode=refresh$\r\nDisallow: /bug-navigator # Bug Data\r\nDisallow: /web/telepresence/pro/\r\nDisallow: /cgi-bin # no programs\r\nDisallow: /pcgi-bin # no programs\r\nDisallow: /univ-src/ccden # will get content through /univercd\r\nDisallow: /cpropub/univercd # obsolete\r\nDisallow: /jobs     # temporary entry per performance team\r\nDisallow: /en/US/swassets/\r\nDisallow: /univercd/cc/td/doc\r\nDisallow: /univercd/\r\nDisallow: /tacpage\r\nDisallow: /survey/\r\nDisallow: /web/login\r\nDisallow: /ciscodotcom/\r\nDisallow: /c/contentReuse/\r\nDisallow: /c/contentreuse/\r\nDisallow: /c/dam/assets/offers/pdfs/\t\r\nDisallow: /c/dam/en/us/td/docs/Sanity/datasheet/\t\r\nDisallow: /c/dam/m/da_dk/offers/assets/images/\t\r\nDisallow: /c/dam/m/da_dk/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/de_de/offers/assets/images/\t\r\nDisallow: /c/dam/m/de_de/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/digital/\r\nDisallow: /c/dam/m/en_au/offers/assets/images/\t\r\nDisallow: /c/dam/m/en_au/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/en_au/offers/images/\t\r\nDisallow: /c/dam/m/en_au/offers/video/\t\r\nDisallow: /c/dam/m/en_emear/offers/assets/images/\t\r\nDisallow: /c/dam/m/en_emear/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/en_hk/offers/assets/images/\t\r\nDisallow: /c/dam/m/en_hk/offers/assets/pdf/\t\r\nDisallow: /c/dam/m/en_id/offers/assets/images/\t\r\nDisallow: /c/dam/m/en_id/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/en_id/offers/images/\t\r\nDisallow: /c/dam/m/en_in/offers/assets/images/\t\r\nDisallow: /c/dam/m/en_in/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/en_in/offers/images\t\r\nDisallow: /c/dam/m/en_in/offers/video/\t\r\nDisallow: /c/dam/m/en_my/offers/assets/images/\t\r\nDisallow: /c/dam/m/en_my/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/en_my/offers/images/\t\r\nDisallow: /c/dam/m/en_ph/offers/assets/images/\t\r\nDisallow: /c/dam/m/en_ph/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/en_ph/offers/images/\t\r\nDisallow: /c/dam/m/en_sg/offers/assets/images/\t\r\nDisallow: /c/dam/m/en_sg/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/en_sg/offers/images/\t\r\nDisallow: /c/dam/m/en_sg/offers/video/\t\r\nDisallow: /c/dam/m/en_th/offers/assets/images/\t\r\nDisallow: /c/dam/m/en_th/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/en_th/offers/images/\t\r\nDisallow: /c/dam/m/en_uk/offers/assets/images/\t\r\nDisallow: /c/dam/m/en_uk/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/en_vn/offers/assets/images/\t\r\nDisallow: /c/dam/m/en_vn/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/es_es/offers/assets/images/\t\r\nDisallow: /c/dam/m/es_es/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/es_la/offers/assets/images/\t\r\nDisallow: /c/dam/m/es_la/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/es_la/offers/video/\t\r\nDisallow: /c/dam/m/es_mx/offers/assets/images/\t\r\nDisallow: /c/dam/m/es_mx/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/fi_fi/offers/assets/images/\t\r\nDisallow: /c/dam/m/fi_fi/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/fr_ca/offers/assets/images/\t\r\nDisallow: /c/dam/m/fr_ca/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/fr_ca/offers/video/\t\r\nDisallow: /c/dam/m/fr_fr/offers/assets/images\t\r\nDisallow: /c/dam/m/fr_fr/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/it_it/offers/assets/images/\t\r\nDisallow: /c/dam/m/it_it/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/ja_jp/offers/161/security/images/\t\r\nDisallow: /c/dam/m/ja_jp/offers/161/security/pdf/\t\r\nDisallow: /c/dam/m/ja_jp/offers/162/network/images\t\r\nDisallow: /c/dam/m/ja_jp/offers/162/network/pdf/\t\r\nDisallow: /c/dam/m/ja_jp/offers/162/sc10/images/\t\r\nDisallow: /c/dam/m/ja_jp/offers/162/sc10/pdf/\t\r\nDisallow: /c/dam/m/ja_jp/offers/162/security/pdf/\t\r\nDisallow: /c/dam/m/ko_kr/offers/assets/images/\t\r\nDisallow: /c/dam/m/ko_kr/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/ko_kr/offers/images/\t\r\nDisallow: /c/dam/m/nl_be/offers/assets/images/\t\r\nDisallow: /c/dam/m/nl_be/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/nl_nl/offers/assets/images/\t\r\nDisallow: /c/dam/m/nl_nl/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/no_no/offers/assets/images/\t\r\nDisallow: /c/dam/m/no_no/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/pl_pl/offers/assets/images/\t\r\nDisallow: /c/dam/m/pl_pl/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/pt_br/offers/assets/images\t\r\nDisallow: /c/dam/m/pt_br/offers/assets/pdfs\t\r\nDisallow: /c/dam/m/pt_br/offers/img/\t\r\nDisallow: /c/dam/m/pt_br/offers/pdf/\t\r\nDisallow: /c/dam/m/pt_br/offers/video/\t\r\nDisallow: /c/dam/m/ru_ru/offers/assets/images/\t\r\nDisallow: /c/dam/m/ru_ru/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/sv_se/offers/assets/images/\t\r\nDisallow: /c/dam/m/sv_se/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/tr_tr/offers/assets/images/\t\r\nDisallow: /c/dam/m/tr_tr/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/zh_cn/offers/assets/images/\t\r\nDisallow: /c/dam/m/zh_cn/offers/assets/pdfs/\t\r\nDisallow: /c/dam/m/zh_tw/offers/assets/images/\t\r\nDisallow: /c/dam/m/zh_tw/offers/assets/pdfs/\t\r\nDisallow: /c/en/us/applicat/camp/\t\r\nDisallow: /c/en/us/applicat/non-camp/\t\r\nDisallow: /c/m/digital/\r\nDisallow: /cisco/web/UK/telepresence/pro/\t\r\nDisallow: /content/en/us/td/docs/Sanity\t\r\nDisallow: /c/en/us/products/products-sanity-test/ \t\r\nDisallow: /c/en/us/solutions/solutions-sanity-test/\t\r\nDisallow: /en/US/swassets/sw274/sitewide_country_language_selector.html\t\r\nDisallow: /JP/support/public/mt/tac/100/1002347/techtip_conventions.shtml\t\r\nDisallow: /public/library/iosplanner/reldesignation.html\t\r\nDisallow: /web/AT/telepresence/pro/\t\r\nDisallow: /web/BE/fr/telepresence/pro/\t\r\nDisallow: /web/BE/nl/telepresence/pro/\t\r\nDisallow: /web/BE/telepresence/pro/\t\r\nDisallow: /web/CH/de/telepresence/pro/\t\r\nDisallow: /web/CH/fr/telepresence/pro/\t\r\nDisallow: /web/CZ/telepresence/pro/\t\r\nDisallow: /web/DE/telepresence/pro/\t\r\nDisallow: /web/DK/telepresence/pro/\t\r\nDisallow: /web/ES/telepresence/pro/\t\r\nDisallow: /web/FI/telepresence/pro/\t\r\nDisallow: /web/FR/telepresence/pro/\t\r\nDisallow: /web/go/\t\r\nDisallow: /web/help/index.html\t\r\nDisallow: /web/HU/telepresence/pro/\t\r\nDisallow: /web/IT/telepresence/pro/\t\r\nDisallow: /web/ME/ar/telepresence/pro/\t\r\nDisallow: /web/ME/telepresence/pro/\t\r\nDisallow: /web/NL/telepresence/pro/\t\r\nDisallow: /web/NO/telepresence/pro/\t\r\nDisallow: /web/offers/pdfs/\t\r\nDisallow: /web/PL/telepresence/pro/\t\r\nDisallow: /web/PO/telepresence/pro/\t\r\nDisallow: /web/PT/telepresence/pro/\t\r\nDisallow: /web/RO/telepresence/pro/\t\r\nDisallow: /web/RU/telepresence/pro/\t\r\nDisallow: /web/SE/telepresence/pro/\t\r\nDisallow: /web/TR/telepresence/pro/\t\r\nDisallow: /web/ZA/telepresence/pro/\r\nDisallow: /c/ru_ru/\r\nDisallow: /c/m/ru_ru/\r\nDisallow: /content/ru_ru/\r\nDisallow: /cisco/support/RU/\r\nDisallow: /cisco/web/support/RU/\r\nDisallow: /ru/\r\nDisallow: /c/dam/assets/global/pdfs/security/ru/\r\nDisallow: /c/dam/assets/global/RU/\r\nDisallow: /c/dam/global/ru_ru/\r\nDisallow: /c/dam/m/ru_ru/\r\nDisallow: /c/dam/marketing/ru_ru/\r\nDisallow: /web/offer/em/pdfs_innovators/RU/\r\nDisallow: /web/RU/\r\nDisallow: /global/RU/\r\nDisallow: /cisco/web/support/RU/\r\nDisallow: /c/en/us/support/web/tools/scm/help/stage/ru-RU/\r\nDisallow: /c/en/us/support/web/tools/scm/help/ru-RU/\r\nDisallow: /web/applicat\r\nDisallow: /c/en/us/applicat/\r\nDisallow: /cisco/web/\r\nDisallow: /site/us/en/test/\r\nDisallow: /assets/sol/sb/\r\nDisallow: /c/dam/r/newsroom/daily-news/\r\nDisallow: /en/US/docs/general/Test/ \r\nDisallow: /c/login\r\nDisallow: /content/cdc/login\r\nDisallow: /web/solutions/\r\nDisallow: /c/en/us/support/index-beta.html\r\nDisallow: /resources\r\nDisallow: /abm/\r\nDisallow: /abx/\r\n#--------------------------------\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_ar_ae_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_ar_eg_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_ar_qa_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_ar_sa_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_az_az_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_bg_bg_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_bs_ba_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_cs_cz_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_da_dk_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_de_at_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_de_ch_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_de_de_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_el_gr_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_ae_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_au_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_be_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_ca_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_cy_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_dz_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_eg_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_hk_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_id_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_il_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_in_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_mt_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_my_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_ng_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_ph_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_qa_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_sa_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_sg_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_th_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_uk_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_us_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_en_za_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_ar_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_bo_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_bz_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_cl_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_co_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_cr_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_ec_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_es_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_gt_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_hn_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_mx_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_ni_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_pa_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_pe_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_pr_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_py_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_sv_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_uy_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_es_ve_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_et_ee_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_fi_fi_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_fr_be_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_fr_ca_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_fr_ch_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_fr_dz_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_fr_fr_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_hr_hr_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_hu_hu_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_it_it_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_ja_jp_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_ko_kr_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_lt_lt_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_lv_lv_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_mk_mk_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_nl_be_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_nl_nl_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_no_no_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_pl_pl_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_pt_br_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_pt_pt_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_ro_ro_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_ru_kz_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_ru_ua_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_sk_sk_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_sl_si_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_sr_rs_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_sv_se_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_th_th_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_tr_tr_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_uk_ua_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_vi_vn_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_zh_cn_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_zh_hk_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_zh_tw_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_migration_at_scale_on_prem_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/www_cisco_com_migration_at_scale_index.xml\r\nSitemap: https://www.cisco.com/web/sitemap/rss/rss.xml\r\nSitemap: https://www.cisco.com/web/sitemap/rss/rss1.xml\r\nSitemap: https://www.cisco.com/web/sitemap/rss/rss2.xml\r\nSitemap: https://www.cisco.com/web/sitemap/rss/rss3.xml\r\nSitemap: https://www.cisco.com/web/sitemap/rss/rss4.xml\r\nSitemap: https://www.cisco.com/web/sitemap/rss/rss5.xml\r\nSitemap: https://www.cisco.com/web/sitemap/rss/rss6.xml\r\nSitemap: https://www.cisco.com/web/sitemap/rss/rss7.xml\r\nSitemap: https://www.cisco.com/web/sitemap/technical-documentation.xml\r\n#--------------------------------\r\nUser-agent: Yandex\r\nDisallow: /c/ru_ru/\r\nDisallow: /c/m/ru_ru/\r\nDisallow: /content/ru_ru/\r\nDisallow: /cisco/support/RU/\r\nDisallow: /cisco/web/support/RU/\r\nDisallow: /ru/\r\nDisallow: /c/dam/assets/global/pdfs/security/ru/\r\nDisallow: /c/dam/assets/global/RU/\r\nDisallow: /c/dam/global/ru_ru/\r\nDisallow: /c/dam/m/ru_ru/\r\nDisallow: /c/dam/marketing/ru_ru/\r\nDisallow: /web/offer/em/pdfs_innovators/RU/\r\nDisallow: /web/RU/\r\nDisallow: /global/RU/\r\nDisallow: /cisco/web/support/RU/\r\nDisallow: /c/en/us/support/web/tools/scm/help/stage/ru-RU/\r\nDisallow: /c/en/us/support/web/tools/scm/help/ru-RU/\r\n\r\n\r\n#--------------------------------\r\n# All changes to robots.txt need to be approved by search-seo-and-site@cisco.com\r\n#\r\n",
+    "sitemap_xml": "Not found"
+  },
+  "archive": {
+    "total_snapshots": 0,
+    "first_seen": null,
+    "last_seen": null,
+    "interesting_snapshots": [],
+    "url_changes": [],
+    "error": "HTTPConnectionPool(host='web.archive.org', port=80): Max retries exceeded with url: /cdx/search/cdx?url=cisco.com&output=json&collapse=timestamp%3A8&limit=100 (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x0000028C974EFF80>: Failed to resolve 'web.archive.org' ([Errno 11001] getaddrinfo failed)\"))"
+  }
+}

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PE Malware Static Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                <h1>PE Malware Analyzer</h1>
+            </div>
+            <p class="subtitle">Static Analysis Tool for Windows Executables</p>
+        </header>
+
+        <!-- Upload Section -->
+        <section class="upload-section" id="uploadSection">
+            <div class="upload-area" id="dropZone">
+                <div class="upload-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                </div>
+                <h3>Drop your file here</h3>
+                <p class="upload-text">or click to browse</p>
+                <p class="file-types">Supported: .exe, .dll (Max 10MB)</p>
+                <input type="file" id="fileInput" accept=".exe,.dll" hidden>
+            </div>
+            
+            <div class="selected-file" id="selectedFile" style="display: none;">
+                <div class="file-info">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                        <polyline points="13 2 13 9 20 9"/>
+                    </svg>
+                    <span id="fileName">filename.exe</span>
+                </div>
+                <button class="btn btn-primary" id="analyzeBtn">
+                    <span class="btn-text">Analyze File</span>
+                    <span class="spinner" style="display: none;"></span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Loading State -->
+        <div class="loading-state" id="loadingState" style="display: none;">
+            <div class="spinner large"></div>
+            <p>Analyzing file structure...</p>
+        </div>
+
+        <!-- Results Section -->
+        <section class="results-section" id="resultsSection" style="display: none;">
+            <!-- Risk Overview -->
+            <div class="risk-card" id="riskCard">
+                <div class="risk-header">
+                    <h2>Risk Assessment</h2>
+                    <div class="risk-badge" id="riskBadge">LOW</div>
+                </div>
+                <div class="risk-score">
+                    <div class="score-circle" id="scoreCircle">
+                        <span class="score-value" id="scoreValue">0</span>
+                        <span class="score-label">/100</span>
+                    </div>
+                    <div class="risk-details">
+                        <h3 id="riskTitle">Clean File</h3>
+                        <p id="riskDescription">No significant threats detected</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                            <line x1="8" y1="21" x2="16" y2="21"/>
+                            <line x1="12" y1="17" x2="12" y2="21"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="statApis">0</span>
+                        <span class="stat-label">Suspicious APIs</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="statSections">0</span>
+                        <span class="stat-label">Packed Sections</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="4 7 4 4 20 4 20 7"/>
+                            <line x1="9" y1="20" x2="15" y2="20"/>
+                            <line x1="12" y1="4" x2="12" y2="20"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="statStrings">0</span>
+                        <span class="stat-label">Suspicious Strings</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Results -->
+            <div class="details-container">
+                <!-- File Information -->
+                <div class="detail-card">
+                    <div class="detail-header" onclick="toggleCard(this)">
+                        <h3>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                            </svg>
+                            File Information
+                        </h3>
+                        <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                    <div class="detail-content">
+                        <table class="info-table" id="fileInfoTable">
+                            <!-- Populated by JS -->
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PE Header -->
+                <div class="detail-card">
+                    <div class="detail-header" onclick="toggleCard(this)">
+                        <h3>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="3" y1="9" x2="21" y2="9"/>
+                                <line x1="9" y1="21" x2="9" y2="9"/>
+                            </svg>
+                            PE Header Information
+                        </h3>
+                        <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                    <div class="detail-content">
+                        <table class="info-table" id="peInfoTable">
+                            <!-- Populated by JS -->
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Suspicious APIs -->
+                <div class="detail-card">
+                    <div class="detail-header" onclick="toggleCard(this)">
+                        <h3>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                            Suspicious API Calls
+                        </h3>
+                        <span class="badge" id="apiBadge">0</span>
+                        <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                    <div class="detail-content">
+                        <div class="api-list" id="apiList">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section Analysis -->
+                <div class="detail-card">
+                    <div class="detail-header" onclick="toggleCard(this)">
+                        <h3>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                                <line x1="1" y1="10" x2="23" y2="10"/>
+                            </svg>
+                            Section Analysis
+                        </h3>
+                        <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                    <div class="detail-content">
+                        <div class="section-list" id="sectionList">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suspicious Strings -->
+                <div class="detail-card">
+                    <div class="detail-header" onclick="toggleCard(this)">
+                        <h3>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="16 18 22 12 16 6"/>
+                                <polyline points="8 6 2 12 8 18"/>
+                            </svg>
+                            Suspicious Strings
+                        </h3>
+                        <span class="badge" id="stringBadge">0</span>
+                        <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                    <div class="detail-content">
+                        <div class="string-list" id="stringList">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Possible Behaviors -->
+                <div class="detail-card behaviors-card" id="behaviorsCard" style="display: none;">
+                    <div class="detail-header">
+                        <h3>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="16" x2="12" y2="12"/>
+                                <line x1="12" y1="8" x2="12.01" y2="8"/>
+                            </svg>
+                            Possible Malicious Behaviors
+                        </h3>
+                    </div>
+                    <div class="detail-content">
+                        <ul class="behavior-list" id="behaviorList">
+                            <!-- Populated by JS -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Download Buttons -->
+            <div class="download-section">
+                <button class="btn btn-secondary" onclick="downloadReport('txt')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download TXT Report
+                </button>
+                <button class="btn btn-secondary" onclick="downloadReport('json')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download JSON Report
+                </button>
+            </div>
+
+            <!-- Analyze Another -->
+            <div class="new-analysis">
+                <button class="btn btn-outline" onclick="resetAnalyzer()">
+                    Analyze Another File
+                </button>
+            </div>
+        </section>
+
+        <!-- Error Toast -->
+        <div class="toast" id="errorToast">
+            <div class="toast-content">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="15" y1="9" x2="9" y2="15"/>
+                    <line x1="9" y1="9" x2="15" y2="15"/>
+                </svg>
+                <span id="errorMessage">Error message</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentAnalysisData = null;
+        let selectedFile = null;
+
+        // DOM Elements
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const selectedFileDiv = document.getElementById('selectedFile');
+        const fileNameSpan = document.getElementById('fileName');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const uploadSection = document.getElementById('uploadSection');
+        const loadingState = document.getElementById('loadingState');
+        const resultsSection = document.getElementById('resultsSection');
+
+        // Event Listeners
+        dropZone.addEventListener('click', () => fileInput.click());
+        
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileSelect(files[0]);
+            }
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+        
+        analyzeBtn.addEventListener('click', analyzeFile);
+
+        // Functions
+        function handleFileSelect(file) {
+            // Validate file
+            if (!file.name.match(/\.(exe|dll)$/i)) {
+                showError('Please select a valid .exe or .dll file');
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) {
+                showError('File size must be less than 10MB');
+                return;
+            }
+            
+            selectedFile = file;
+            fileNameSpan.textContent = file.name;
+            selectedFileDiv.style.display = 'flex';
+        }
+
+        async function analyzeFile() {
+            if (!selectedFile) return;
+            
+            // Show loading
+            uploadSection.style.display = 'none';
+            loadingState.style.display = 'block';
+            
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Analysis failed');
+                }
+                
+                currentAnalysisData = data;
+                displayResults(data);
+                
+                loadingState.style.display = 'none';
+                resultsSection.style.display = 'block';
+                
+            } catch (error) {
+                loadingState.style.display = 'none';
+                uploadSection.style.display = 'block';
+                showError(error.message);
+            }
+        }
+
+        function displayResults(data) {
+            // Risk card
+            const riskLevel = data.risk_level;
+            const riskScore = data.risk_score;
+            
+            document.getElementById('riskBadge').textContent = riskLevel;
+            document.getElementById('riskBadge').className = `risk-badge ${riskLevel.toLowerCase()}`;
+            document.getElementById('scoreValue').textContent = riskScore;
+            document.getElementById('scoreCircle').style.background = `conic-gradient(
+                ${riskLevel === 'High' ? '#ef4444' : riskLevel === 'Medium' ? '#f59e0b' : '#10b981'} 
+                ${riskScore * 3.6}deg, 
+                #e5e7eb 0deg
+            )`;
+            
+            document.getElementById('riskTitle').textContent = 
+                riskLevel === 'High' ? 'High Risk Detected' :
+                riskLevel === 'Medium' ? 'Suspicious Activity Detected' : 'Low Risk File';
+            
+            document.getElementById('riskDescription').textContent = 
+                riskLevel === 'High' ? 'Multiple malicious indicators found' :
+                riskLevel === 'Medium' ? 'Some suspicious characteristics detected' : 
+                'File appears to be clean';
+            
+            // Stats
+            document.getElementById('statApis').textContent = data.suspicious_apis.length;
+            document.getElementById('statSections').textContent = 
+                data.sections.filter(s => s.suspicious).length;
+            document.getElementById('statStrings').textContent = data.suspicious_strings.length;
+            
+            // File info
+            const fileInfo = data.file_info;
+            document.getElementById('fileInfoTable').innerHTML = `
+                <tr><td>File Name</td><td>${fileInfo.file_name}</td></tr>
+                <tr><td>File Type</td><td>${fileInfo.file_type}</td></tr>
+                <tr><td>File Size</td><td>${fileInfo.file_size.toLocaleString()} bytes</td></tr>
+                <tr><td>MD5 Hash</td><td><code>${fileInfo.md5_hash}</code></td></tr>
+            `;
+            
+            // PE info
+            const peInfo = data.pe_info;
+            document.getElementById('peInfoTable').innerHTML = `
+                <tr><td>Entry Point</td><td><code>${peInfo.entry_point}</code></td></tr>
+                <tr><td>Image Base</td><td><code>${peInfo.image_base}</code></td></tr>
+                <tr><td>Compilation Time</td><td>${peInfo.compilation_time}</td></tr>
+                <tr><td>Sections</td><td>${peInfo.num_sections}</td></tr>
+                <tr><td>Subsystem</td><td>${peInfo.subsystem}</td></tr>
+            `;
+            
+            // APIs
+            const apiList = document.getElementById('apiList');
+            document.getElementById('apiBadge').textContent = data.suspicious_apis.length;
+            
+            if (data.suspicious_apis.length === 0) {
+                apiList.innerHTML = '<div class="empty-state">No suspicious APIs detected</div>';
+            } else {
+                apiList.innerHTML = data.suspicious_apis.map(api => `
+                    <div class="api-item">
+                        <div class="api-function">${api.function}</div>
+                        <div class="api-details">
+                            <span class="api-dll">${api.dll}</span>
+                            <span class="api-behavior">${api.behavior}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Sections
+            const sectionList = document.getElementById('sectionList');
+            sectionList.innerHTML = data.sections.map(section => `
+                <div class="section-item ${section.suspicious ? 'suspicious' : ''}">
+                    <div class="section-header">
+                        <span class="section-name">${section.name}</span>
+                        <span class="entropy-badge ${section.suspicious ? 'high' : 'normal'}">
+                            Entropy: ${section.entropy}
+                        </span>
+                    </div>
+                    <div class="section-details">
+                        <span>Virtual: ${section.virtual_size.toLocaleString()} bytes</span>
+                        <span>Raw: ${section.raw_size.toLocaleString()} bytes</span>
+                    </div>
+                    <div class="section-flags">
+                        ${section.characteristics.map(c => `<span class="flag">${c}</span>`).join('')}
+                    </div>
+                    ${section.suspicious ? '<div class="warning-text">⚠️ High entropy - possibly packed or encrypted</div>' : ''}
+                </div>
+            `).join('');
+            
+            // Strings
+            const stringList = document.getElementById('stringList');
+            document.getElementById('stringBadge').textContent = data.suspicious_strings.length;
+            
+            if (data.suspicious_strings.length === 0) {
+                stringList.innerHTML = '<div class="empty-state">No suspicious strings detected</div>';
+            } else {
+                // Group by category
+                const grouped = {};
+                data.suspicious_strings.forEach(s => {
+                    if (!grouped[s.category]) grouped[s.category] = [];
+                    grouped[s.category].push(s);
+                });
+                
+                stringList.innerHTML = Object.entries(grouped).map(([category, strings]) => `
+                    <div class="string-group">
+                        <h4>${category}</h4>
+                        ${strings.slice(0, 5).map(s => `
+                            <div class="string-item">
+                                <code>${escapeHtml(s.string)}</code>
+                                <span class="string-type">${s.type}</span>
+                            </div>
+                        `).join('')}
+                        ${strings.length > 5 ? `<div class="more-strings">+ ${strings.length - 5} more</div>` : ''}
+                    </div>
+                `).join('');
+            }
+            
+            // Behaviors
+            if (data.possible_behaviors.length > 0) {
+                document.getElementById('behaviorsCard').style.display = 'block';
+                document.getElementById('behaviorList').innerHTML = 
+                    data.possible_behaviors.map(b => `<li>${b}</li>`).join('');
+            }
+        }
+
+        function toggleCard(header) {
+            const card = header.parentElement;
+            card.classList.toggle('collapsed');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        async function downloadReport(format) {
+            if (!currentAnalysisData) return;
+            
+            try {
+                const response = await fetch('/download_report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        format: format,
+                        data: currentAnalysisData
+                    })
+                });
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `malware_analysis_report.${format}`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }
+            } catch (error) {
+                showError('Failed to download report');
+            }
+        }
+
+        function resetAnalyzer() {
+            selectedFile = null;
+            currentAnalysisData = null;
+            fileInput.value = '';
+            
+            resultsSection.style.display = 'none';
+            uploadSection.style.display = 'block';
+            selectedFileDiv.style.display = 'none';
+            
+            // Reset all displays
+            document.getElementById('behaviorsCard').style.display = 'none';
+        }
+
+        function showError(message) {
+            const toast = document.getElementById('errorToast');
+            document.getElementById('errorMessage').textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

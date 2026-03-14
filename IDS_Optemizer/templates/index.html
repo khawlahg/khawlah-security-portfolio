@@ -1,0 +1,374 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="grid grid-2" style="margin-bottom: 3rem;">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">
+                <i class="fas fa-upload"></i>
+                Upload Dataset
+            </h2>
+            <p class="card-subtitle">
+                Upload a CSV file with columns: failed_logins, packet_rate, session_time, label
+            </p>
+        </div>
+
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <h3>Drop your CSV file here</h3>
+            <p>or click to browse</p>
+            <input type="file" id="fileInput" accept=".csv" style="display: none;">
+        </div>
+
+        <div id="uploadStatus" class="hidden"></div>
+        
+        <div class="progress-bar hidden" id="progressBar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div id="datasetPreview" class="hidden">
+            <h4 style="margin: 1.5rem 0 1rem 0; color: var(--text-primary);">Dataset Preview</h4>
+            <div class="table-container">
+                <table id="previewTable">
+                    <thead>
+                        <tr>
+                            <th>failed_logins</th>
+                            <th>packet_rate</th>
+                            <th>session_time</th>
+                            <th>label</th>
+                        </tr>
+                    </thead>
+                    <tbody id="previewBody"></tbody>
+                </table>
+            </div>
+            <p id="datasetInfo" style="margin-top: 1rem; color: var(--text-muted); font-size: 0.875rem;"></p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">
+                <i class="fas fa-database"></i>
+                Use Sample Dataset
+            </h2>
+            <p class="card-subtitle">
+                Don't have a dataset? Use our synthetic IDS dataset for demonstration
+            </p>
+        </div>
+
+        <div style="text-align: center; padding: 2rem 0;">
+            <div style="font-size: 4rem; color: var(--primary-burgundy); margin-bottom: 1rem;">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 style="margin-bottom: 1rem;">Synthetic IDS Dataset</h3>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">
+                Contains 1,000 synthetic network sessions with normal and intrusion traffic patterns
+            </p>
+            <button class="btn btn-outline" onclick="loadSampleDataset()" id="sampleBtn">
+                <i class="fas fa-magic"></i>
+                Generate Sample Dataset
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="card hidden" id="analysisCard">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class="fas fa-play-circle"></i>
+            Run Analysis
+        </h2>
+        <p class="card-subtitle">
+            Execute all optimization methods and compare their performance
+        </p>
+    </div>
+
+    <div style="background: rgba(128, 0, 32, 0.05); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+        <h4 style="color: var(--primary-burgundy); margin-bottom: 1rem;">
+            <i class="fas fa-info-circle"></i> Analysis Methods
+        </h4>
+        <div class="grid grid-2" style="gap: 1rem;">
+            <div>
+                <strong style="color: var(--text-primary);">Fixed Thresholds</strong>
+                <p style="color: var(--text-muted); font-size: 0.875rem;">Baseline using manual thresholds</p>
+            </div>
+            <div>
+                <strong style="color: var(--text-primary);">Greedy Search</strong>
+                <p style="color: var(--text-muted); font-size: 0.875rem;">Iterative local improvement</p>
+            </div>
+            <div>
+                <strong style="color: var(--text-primary);">A* Search</strong>
+                <p style="color: var(--text-muted); font-size: 0.875rem;">Heuristic-guided exploration</p>
+            </div>
+            <div>
+                <strong style="color: var(--text-primary);">Genetic Algorithm</strong>
+                <p style="color: var(--text-muted); font-size: 0.875rem;">Evolutionary optimization</p>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="runAnalysis()" id="runBtn" style="font-size: 1rem; padding: 1rem 2rem;">
+        <i class="fas fa-rocket"></i>
+        Run Analysis
+    </button>
+
+    <div id="analysisStatus" class="hidden"></div>
+    
+    <div class="progress-bar hidden" id="analysisProgress">
+        <div class="progress-fill" id="analysisProgressFill"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let currentDataset = null;
+let currentFilename = null;
+let useSample = false;
+
+// File upload handling
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('fileInput');
+
+// Drag and drop
+uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+});
+
+uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+});
+
+uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        fileInput.files = files;
+        handleFileUpload(files[0]);
+    }
+});
+
+fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+        handleFileUpload(e.target.files[0]);
+    }
+});
+
+function handleFileUpload(file) {
+    const statusDiv = document.getElementById('uploadStatus');
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
+    
+    statusDiv.className = 'status-message status-info';
+    statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading file...';
+    statusDiv.classList.remove('hidden');
+    progressBar.classList.remove('hidden');
+    
+    // Simulate progress
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+        progress += Math.random() * 15;
+        if (progress >= 90) progress = 90;
+        progressFill.style.width = progress + '%';
+    }, 100);
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    fetch('/upload', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        clearInterval(progressInterval);
+        progressFill.style.width = '100%';
+        
+        if (data.error) {
+            statusDiv.className = 'status-message status-error';
+            statusDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${data.error}`;
+            progressBar.classList.add('hidden');
+            return;
+        }
+        
+        statusDiv.className = 'status-message status-success';
+        statusDiv.innerHTML = `<i class="fas fa-check-circle"></i> File uploaded successfully! (${data.rows} rows)`;
+        
+        currentFilename = data.filename;
+        useSample = false;
+        
+        // Show preview
+        showDatasetPreview(data.preview, data.rows);
+        
+        // Show analysis card
+        setTimeout(() => {
+            document.getElementById('analysisCard').classList.remove('hidden');
+            document.getElementById('analysisCard').classList.add('fade-in');
+        }, 500);
+    })
+    .catch(error => {
+        clearInterval(progressInterval);
+        statusDiv.className = 'status-message status-error';
+        statusDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> Upload failed: ${error.message}`;
+        progressBar.classList.add('hidden');
+    });
+}
+
+function loadSampleDataset() {
+    const btn = document.getElementById('sampleBtn');
+    const statusDiv = document.getElementById('uploadStatus');
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+    
+    fetch('/sample_dataset')
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            statusDiv.className = 'status-message status-success';
+            statusDiv.innerHTML = `<i class="fas fa-check-circle"></i> Sample dataset generated! (${data.rows} rows)`;
+            statusDiv.classList.remove('hidden');
+            
+            currentFilename = data.filename;
+            useSample = true;
+            
+            // Show preview
+            showDatasetPreview(data.preview, data.rows);
+            
+            // Show analysis card
+            setTimeout(() => {
+                document.getElementById('analysisCard').classList.remove('hidden');
+                document.getElementById('analysisCard').classList.add('fade-in');
+            }, 500);
+        })
+        .catch(error => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-magic"></i> Generate Sample Dataset';
+            
+            statusDiv.className = 'status-message status-error';
+            statusDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> Error: ${error.message}`;
+            statusDiv.classList.remove('hidden');
+        });
+}
+
+function showDatasetPreview(preview, totalRows) {
+    const previewDiv = document.getElementById('datasetPreview');
+    const previewBody = document.getElementById('previewBody');
+    const datasetInfo = document.getElementById('datasetInfo');
+    
+    previewBody.innerHTML = '';
+    preview.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${row.failed_logins}</td>
+            <td>${row.packet_rate}</td>
+            <td>${row.session_time}</td>
+            <td><span class="method-badge ${row.label == 1 ? 'method-ga' : 'method-fixed'}">${row.label == 1 ? 'Intrusion' : 'Normal'}</span></td>
+        `;
+        previewBody.appendChild(tr);
+    });
+    
+    datasetInfo.textContent = `Showing first 10 rows of ${totalRows} total rows`;
+    previewDiv.classList.remove('hidden');
+    previewDiv.classList.add('fade-in');
+}
+
+function runAnalysis() {
+    if (!currentFilename) {
+        alert('Please upload a dataset first!');
+        return;
+    }
+    
+    const btn = document.getElementById('runBtn');
+    const statusDiv = document.getElementById('analysisStatus');
+    const progressBar = document.getElementById('analysisProgress');
+    const progressFill = document.getElementById('analysisProgressFill');
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running Analysis...';
+    
+    statusDiv.className = 'status-message status-info';
+    statusDiv.innerHTML = '<i class="fas fa-cog fa-spin"></i> Running Fixed Threshold Analysis...';
+    statusDiv.classList.remove('hidden');
+    progressBar.classList.remove('hidden');
+    
+    // Simulate progress through different stages
+    const stages = [
+        { progress: 15, message: 'Running Fixed Threshold Analysis...' },
+        { progress: 35, message: 'Running Greedy Search...' },
+        { progress: 55, message: 'Running A* Search...' },
+        { progress: 75, message: 'Running Genetic Algorithm...' },
+        { progress: 90, message: 'Generating visualizations...' }
+    ];
+    
+    let currentStage = 0;
+    const progressInterval = setInterval(() => {
+        if (currentStage < stages.length) {
+            progressFill.style.width = stages[currentStage].progress + '%';
+            statusDiv.innerHTML = `<i class="fas fa-cog fa-spin"></i> ${stages[currentStage].message}`;
+            currentStage++;
+        }
+    }, 800);
+    
+    fetch('/analyze', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            filename: currentFilename,
+            use_sample: useSample
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        clearInterval(progressInterval);
+        progressFill.style.width = '100%';
+        
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        
+        statusDiv.className = 'status-message status-success';
+        statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Analysis completed successfully!';
+        
+        // Redirect to results page
+        setTimeout(() => {
+            window.location.href = `/results/${data.result_id}`;
+        }, 1000);
+    })
+    .catch(error => {
+        clearInterval(progressInterval);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-rocket"></i> Run Analysis';
+        
+        statusDiv.className = 'status-message status-error';
+        statusDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> Analysis failed: ${error.message}`;
+        progressBar.classList.add('hidden');
+    });
+}
+
+// Initialize
+window.addEventListener('load', () => {
+    // Add some initial animation
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            card.style.transition = 'all 0.5s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 200);
+    });
+});
+</script>
+{% endblock %}
